@@ -1,99 +1,101 @@
 ## LLM-Assisted BDD Functional Testing for a Sample Web Application
 
-This repository is a **controlled, campus-hiring case study** that
-demonstrates how Large Language Models (LLMs) *could* assist BDD-style
-functional testing, while keeping safety, validation, and human control
-at the center.
+This repository is a **small case study** built for campus hiring. It
+shows how LLM-style behaviour *could* support BDD-style functional
+testing, while still keeping everything simple, safe, and easy to
+explain.
 
-> Important: No real LLM APIs are called. All behaviour is simulated
-> with simple, readable Python logic.
+> Note: No real LLM APIs are used. All behaviour is simulated with
+> straightforward Python code.
 
 ### Objective
 
-- Show how plain-English requirements can be turned into BDD scenarios.
-- Enforce a validation layer that only allows known, safe actions.
-- Require explicit human approval before anything is automated.
-- Automate **only** the approved happy-path scenario with Playwright.
+- Start from plain-English requirements and turn them into BDD
+	scenarios.
+- Add a simple validation step so only known, safe actions are used.
+- Require a human approval step before any scenario is automated.
+- Run automation only for the approved happy-path scenario using
+	Playwright.
 
 ### Workflow
 
 1. **Requirement**  
-	 A business requirement such as "Users must be able to login" is
-	 provided as plain text.
+	 A short business requirement like "Users must be able to login" is
+	 written in plain English.
 
 2. **Scenario generation (`llm/scenario_generator.py`)**  
-	 - `generate_scenarios(requirement_text)` simulates an LLM:  
-		 - If the text mentions "login", it returns **one happy path** and
-			 **one negative** BDD scenario in Gherkin syntax.  
-		 - Otherwise it returns no scenarios.  
-	 - No APIs, no LangChain, no embeddings—just deterministic logic.
+	 - `generate_scenarios(requirement_text)` acts like a very small,
+		 rule-based LLM.  
+	 - If the text mentions "login", it returns **one happy path** and
+		 **one negative** scenario in Gherkin format.  
+	 - Otherwise, it returns no scenarios. No APIs, LangChain, or
+		 embeddings are involved.
 
 3. **Validation (`llm/validator.py`)**  
 	 - `validate_scenarios(scenarios)` checks that each step line only
-		 uses a small whitelist of known actions: `login`, `enters`,
-		 `clicks`, `redirected`, `displayed`.  
-	 - If any step uses unknown actions, validation fails.  
-	 - This models a **safety gate** in front of automation.
+		 uses a short list of allowed actions: `login`, `enters`, `clicks`,
+		 `redirected`, `displayed`.  
+	 - If any step does not use at least one of these actions, the
+		 scenarios are treated as not valid for automation.
 
 4. **Manual approval (`approval/approval.json`)**  
-	 - A QA reviewer explicitly approves **only** the happy-path
-		 scenario: "Valid user logs in successfully".  
-	 - Negative or exploratory scenarios are **not** approved for
-		 automation and therefore are not present in the feature file.
+	 - A QA reviewer marks **only** the happy-path scenario
+		 "Valid user logs in successfully" as approved.  
+	 - Negative or exploratory flows are kept for analysis, not for
+		 automation.
 
 5. **Selected scenarios for automation (`features/login.feature`)**  
-	 - This feature file contains just one scenario: the approved
-		 happy path.  
-	 - It uses clean Given–When–Then syntax and maps directly to the
-		 local login page in `app/sample_app.html`.
+	 - This feature file holds just one scenario: the approved happy
+		 path.  
+	 - It uses clear Given–When–Then steps and points to the local login
+		 page in `app/sample_app.html`.
 
 6. **Automated execution (`tests/test_login_steps.py`)**  
-	 - Uses **pytest-bdd** for BDD glue and **Playwright** (via
-		 `pytest-playwright`) for browser automation.  
-	 - Opens the local `sample_app.html` over a `file:///` URL, enters
-		 the approved credentials (`admin`/`admin123`), clicks **Login**, and
-		 asserts that the browser navigates to a URL ending with
-		 `dashboard.html`.  
-	 - Only the approved happy-path scenario is automated.
+	 - Uses **pytest-bdd** for the BDD layer and **Playwright** (through
+		 `pytest-playwright`) for the browser.  
+	 - Opens the local login page, enters the approved
+		 credentials (`admin` / `admin123`), clicks **Login**, and checks
+		 that the browser navigates to a URL ending in `dashboard.html`.  
+	 - Only the approved happy-path scenario is wired into automation.
 
 7. **Reporting (`reports/execution_report.txt`)**  
-	 - Captures a simple, readable summary: scenario name, validation
-		 status, manual approval status, and execution result placeholder.  
-	 - Suitable for screenshotting into slides as part of the case study.
+	 - Stores a short test summary: scenario name, validation status,
+		 manual approval status, and final execution result.  
+	 - This file is easy to show in an interview or slide deck.
 
 ### Sample Application (`app/sample_app.html`)
 
-The sample app is a minimal HTML page with:
+The sample app is a very small HTML page with:
 
-- A username field
-- A password field
+- A username textbox
+- A password textbox
 - A **Login** button
 
-Logic is kept intentionally simple:
+The behaviour is straightforward:
 
 - If `username == "admin"` and `password == "admin123"`, the browser
 	is redirected to `dashboard.html`.
-- Otherwise, the page shows "Invalid credentials".
+- For any other combination, the page displays "Invalid credentials".
 
-No additional pages or frameworks are used.
+No extra pages or frameworks are used.
 
 ### Safety and Control Principles
 
-- **No production usage:** This is a demo-only, campus-hiring case
-	study.
-- **No real LLM calls:** All "LLM" behaviour is deterministic and
-	local.
-- **No advanced AI logic:** No embeddings, vector stores, or external
-	orchestration frameworks.
-- **Human in the loop:** Automation is allowed only for scenarios that
-	are validated and explicitly approved.
-- **Separation of responsibilities:**
+- **Not for production:** This project is for learning and campus
+	hiring discussions only.
+- **No real LLM calls:** All "LLM" behaviour is local and
+	deterministic.
+- **No advanced AI stack:** No embeddings, vector databases, or extra
+	orchestration layers.
+- **Human in the loop:** Only validated and manually approved scenarios
+	can be automated.
+- **Clear separation of responsibilities:**
 	- Scenario generation in `llm/`
 	- Validation in `llm/`
 	- Human approval in `approval/`
 	- Executable BDD in `features/`
 	- Automation code in `tests/`
-	- Summary/reporting in `reports/`
+	- Summary and reporting in `reports/`
 
 ### How to Run the Demo (locally)
 
@@ -110,6 +112,6 @@ No additional pages or frameworks are used.
 	 pytest -q
 	 ```
 
-This setup is intentionally minimal and aimed at being easy to read,
-review, and present in a PPT deck during campus hiring discussions.
+The goal of this setup is to stay small and readable so a reviewer can
+quickly understand the flow and reasoning during an interview.
 

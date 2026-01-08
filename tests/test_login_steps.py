@@ -1,8 +1,8 @@
-"""BDD step definitions for the happy-path login scenario.
+"""BDD step definitions for the approved happy-path login scenario.
 
-This uses pytest-bdd for the BDD glue and the
-pytest-playwright plugin for browser automation.
-Only the approved happy path scenario is automated.
+The test uses pytest-bdd for the BDD layer and the
+pytest-playwright plugin for driving the browser. Only
+the approved happy path is automated here.
 """
 
 from functools import partial
@@ -25,8 +25,8 @@ def test_valid_user_logs_in_successfully():
 def app_url() -> str:
 	"""Return an HTTP URL that serves sample_app.html locally.
 
-	This keeps the demo local while avoiding browser
-	restrictions around the file:// scheme.
+	This keeps everything running on the local machine while
+	avoiding browser restrictions around the file:// scheme.
 	"""
 
 	root_dir = Path(__file__).resolve().parents[1] / "app"
@@ -60,8 +60,8 @@ def click_login(page: Page) -> None:
 
 @then("the user is redirected to the dashboard")
 def redirected_to_dashboard(page: Page) -> None:
-	# We only care that the browser navigates to a URL
-	# ending in "dashboard.html". The destination page
-	# itself is not part of this simple demo.
+	# The important check is that the browser ends up on a
+	# URL ending with "dashboard.html". The contents of that
+	# page are outside the scope of this demo.
 	assert page.url.endswith("dashboard.html")
 

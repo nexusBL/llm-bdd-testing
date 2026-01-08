@@ -1,22 +1,23 @@
 """Very simple scenario validator for known actions.
 
-This module simulates a safety/validation layer that
-checks BDD scenarios before they are considered for
-automation. Only a small, whitelisted set of actions
-is allowed to keep behaviour controlled and readable.
+This module acts as a small safety check. It looks at
+BDD scenarios before they are used for automation and
+only accepts steps that use a short, known set of
+actions. This keeps behaviour predictable and easy to
+review.
 """
 
 from typing import Iterable
 
 
-# Whitelisted action keywords that are considered safe/known
+# Action keywords that are treated as safe/known
 KNOWN_ACTION_KEYWORDS = {"login", "enters", "clicks", "redirected", "displayed"}
 
 
 def _extract_step_text(line: str) -> str:
-	"""Return the step text after Given/When/Then/And.
+	"""Return the text part of a step after Given/When/Then/And.
 
-	Lines that do not look like steps are returned unchanged.
+	Lines that are not step definitions are returned unchanged.
 	"""
 
 	prefixes = ("given ", "when ", "then ", "and ")
@@ -32,9 +33,8 @@ def _extract_step_text(line: str) -> str:
 def _uses_only_known_actions(step_text: str) -> bool:
 	"""Check whether the step text mentions only known actions.
 
-	This is intentionally simple: it just checks that at least
-	one of the known action keywords appears in the text and
-	that no obviously unknown verbs are introduced.
+	The check is intentionally simple: it just looks for at
+	least one of the known action keywords in the text.
 	"""
 
 	text = step_text.lower()
@@ -46,12 +46,11 @@ def _uses_only_known_actions(step_text: str) -> bool:
 
 
 def validate_scenarios(scenarios: Iterable[str]) -> bool:
-	"""Validate that all provided scenarios use only known actions.
+	"""Return True if all scenarios use only known actions.
 
-	The function returns True if **every** step line in **every**
-	scenario contains at least one known action keyword. Any
-	scenario with an unknown or unsupported action causes the
-	overall validation to fail.
+	Every step line in every scenario must contain at least one
+	of the allowed action keywords. If any step fails that
+	check, validation fails for the whole set.
 	"""
 
 	for scenario in scenarios:
@@ -69,7 +68,7 @@ def validate_scenarios(scenarios: Iterable[str]) -> bool:
 	return True
 
 
-if __name__ == "__main__":  # small manual demo helper
+if __name__ == "__main__":  # quick manual check helper
 	from llm.scenario_generator import generate_scenarios
 
 	req = "Users must be able to login using a username and password."

@@ -1,9 +1,9 @@
 """Simple, simulated LLM scenario generator.
 
-This module does NOT call any real LLM APIs. It only
-returns fixed BDD-style scenarios based on the input
-requirement text. The goal is to demonstrate how an
-LLM *could* be used in a controlled way for BDD.
+This module does not call any real LLM APIs. It just
+returns fixed BDD-style scenarios from the input
+requirement text to show how an LLM *could* be plugged
+into a BDD-style workflow in a controlled way.
 """
 
 from typing import List
@@ -12,12 +12,12 @@ from typing import List
 def generate_scenarios(requirement_text: str) -> List[str]:
 	"""Generate BDD scenarios from a plain-English requirement.
 
-	For this demo, we simulate LLM behaviour with simple
-	rule-based logic:
+	For this demo, the "LLM" is just a small set of
+	rules:
 
 	- If the requirement mentions "login" (case-insensitive),
-	  we return one happy-path and one negative scenario.
-	- Otherwise, we return an empty list.
+	  return one happy-path and one negative scenario.
+	- Otherwise, return an empty list.
 
 	Scenarios are returned as plain-text Gherkin blocks.
 	"""
@@ -53,7 +53,8 @@ def generate_scenarios(requirement_text: str) -> List[str]:
 	return scenarios
 
 
-if __name__ == "__main__":  # simple manual demo helper
+
+if __name__ == "__main__":  # quick manual demo helper
 	sample_requirement = "Users must be able to login using a username and password."
 	for block in generate_scenarios(sample_requirement):
 		print(block)
