@@ -1,0 +1,5 @@
+Scenario name: Valid user logs in successfully
+Validation status: PASSED (all steps use known actions)
+Manual approval status: APPROVED by QA Reviewer on 2026-01-07
+Execution result: PASSED via pytest-bdd and Playwright
+

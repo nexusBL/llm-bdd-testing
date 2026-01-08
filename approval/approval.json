@@ -1,0 +1,8 @@
+{
+	"scenario_name": "Valid user logs in successfully",
+	"approved": true,
+	"approved_by": "QA Reviewer",
+	"timestamp": "2026-01-07T00:00:00Z",
+	"notes": "Only the happy path is approved for automation. Negative login scenarios are intentionally excluded."
+}
+
